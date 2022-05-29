@@ -1,0 +1,186 @@
+##PRE-REQUISITE ###
+you can use any IDE and database for this purpose but what I used in my Hibernate coding that Ill tell you:
+
+1. ecllipse IDE enterprise version.
+2. MySql Database v-8.0.28
+
+### what file we neede ###
+1. Simple java class where you instance variables, constructors etc. are present. Ex: Student.jva (with student details)
+2. Hibernate Configuration file which is a simple xml file, to establish the connection between java app and database. Ex: Hibernate.cfg.xml
+3. Hibernate doccumentation file, it is also a simple xml file, we need this file for mapping our code with database. Ex: Student.hbm.xml
+4. A Utility file: it is a simple java file, we need this file to get the object of the sessionfactory, cz each operation will perform as session.
+basically we wrote this file once and then we do the copy paste kind thing.
+Ex: HibernateUtil.java
+5. Clint file: This is a simple java file which contain the main() method actual bussiness logic it perform.
+to perform the transactions we use this file. This is the file where hibernate will run and our database actuaaly get connection and we will be able to save our data into database.
+Ex: Hclient.java
+
+CODE:
+1. Customer.java
+package com.jtc.hibernate;
+
+public class Customer {
+	private int cid;
+	private String cname;
+	private String email;
+	private long phone;
+	private String city;
+	private double bal;
+	
+	public Customer() {
+		
+	}
+	
+	public Customer(int cid, String cname, String email, long phone, String city, double bal) {
+		super();
+		this.cid = cid;
+		this.cname = cname;
+		this.email = email;
+		this.phone = phone;
+		this.city = city;
+		this.bal = bal;
+	}
+
+	public int getCid() {
+		return cid;
+	}
+	public void setCid(int cid) {
+		this.cid = cid;
+	}
+	public String getCname() {
+		return cname;
+	}
+	public void setCname(String cname) {
+		this.cname = cname;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public long getPhone() {
+		return phone;
+	}
+	public void setPhone(long phone) {
+		this.phone = phone;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public double getBal() {
+		return bal;
+	}
+	public void setBal(double bal) {
+		this.bal = bal;
+	}
+	
+}
+
+
+2. Configuration file
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+	
+<hibernate-configuration>
+	
+<session-factory>
+		<property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/jyoti</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">sonijyoti</property>
+	    <property name="hibernate.connection.pool_size">99</property>
+	    <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
+	    <property name="hibernate.show_sql">true</property>
+	    <property name="hibernate.formate_sql"></property>
+	    <property name="hbm2ddl.auto">update</property>
+	    <mapping resource="com/jtc/hibernate/customer.hbm.xml"></mapping>
+</session-factory>
+</hibernate-configuration>
+
+3. Hibernate hbm file
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.jtc.hibernate">
+	<class name="Customer" table="customer">
+	<id name="cid" column="cid" type="int">
+		<generator class="increment"/>
+	</id>
+	<property name="cname" column="cname" type="string" ></property>
+	<property name="email" column="email" type="string"></property>
+	<property name="phone" column="phoneno" type="long"></property>
+	<property name="city" column="city" type="string"></property>
+	<property name="bal" column="balance" type="double"></property>
+	
+	</class>
+
+
+</hibernate-mapping>
+
+4. Utility file. hibernate Utility file
+
+package com.jtc.hibernate;
+import org.hibernate.*;
+import org.hibernate.cfg.Configuration;
+public class HibernateUtil {
+	static SessionFactory factory=null;
+	
+	static {
+		try {
+		Configuration cfg=new Configuration();
+		cfg=cfg.configure("hibernate.cfg.xml");
+		factory=cfg.buildSessionFactory();
+	}catch(Exception e) {
+		e.printStackTrace();
+	}
+	}
+	
+	public static SessionFactory getSessionFactory() {
+		
+		
+		return factory;
+	}
+
+}
+
+5. Client file : simple java file
+package com.jtc.hibernate;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.Session;
+
+public class Hclient1 {
+	public static void main(String arg[]) {
+		Transaction tx=null;
+		try {
+			SessionFactory sf=HibernateUtil.getSessionFactory();
+			Session session=sf.openSession();
+			tx=session.beginTransaction();
+			Customer cust=new Customer(101,"jyoti","sp@jtcindia.org",123456,"noida",9000.00);
+			session.save(cust);
+			tx.commit();
+			session.close();
+			System.out.println("inserted........");
+			
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+}
+
+############################now right click on the interface of the Client file and run as java application.
+your program will successfully run and give the message that your database hase updtaed with table.
+when you open the Mysql the you will see that your data got saved.
+
+
+
