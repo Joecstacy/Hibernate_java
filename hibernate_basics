@@ -1,0 +1,33 @@
+################ HIBERNATE #############
+
+SessionFactory: This is very important interface in Hibernate programming. When we will develope any java application then this interrface will be reponsible for configurtation and
+making the connection and for making the transactions. Each transcations is going to proceed the work by the session only. Inside the configuration file, while making the hibernate program
+by using the XML file, at that time the <session-factory> tag is exactly this sessionFactory means. 
+as we know that SessionFactory is an Interface so we cannot make the object of this interface, foe making the Object we need any class, so here we will be using the
+Configuration class.
+      We can say that this is the  THREAD SAFE OBJECT , and for one single project there should only one and one SessionFactory object should be present.
+      
+     and only by the help of the session we will be able to save and retrive our Object into the database.
+     
+######## DIALECT ############
+it is a kind of language, it is very important for the configuration thing. This is responsible for telling our hibernate code that which language we are going to use in our programe.
+ "ORG.HIBERNATE.DIALECT.MYSQLDIALECT"
+ iT IS BEINng used inside the property tag only.
+ 
+ 
+ ############  hbm2ddl   #####
+ 
+ it is also very very important thing when we are writing any hibernate program and doing the mapping through the xml file.
+ It should be auto UPDATE, thne only whenever we will be running our programe then first it will cheack that weather the table is already being present inside the table or not
+ if not being present at that time it will create the table first into the given database and then it will save our object information inside the table into the tabular formate.
+ 
+ 
+ but for the testing purpose we shoud not use the UPDATE command we should use the CREATE command insted.
+ then how any times we will run our program that many times it will generate the table inside the database.
+ 
+ 
+ ########## SINGLE TONE DESIGN PATTERN ############
+ 
+ Inside the hibernate programming we write our UTILITY programe in the single tone design pattern. So what does it mean actually, it means that
+ no matter inside our program how many object we are creating, but at the end only one object will be created and whenevr we will call that object only that object will be called out
+ 
