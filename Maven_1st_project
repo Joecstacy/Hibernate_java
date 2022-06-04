@@ -1,0 +1,85 @@
+##### STEPS TO CREATE YOUR FIRST MAVEN PROJECT ######
+
+PRE-REQUISITE:-
+1. ecllipse IDE enterprise edition
+2. Mysql database
+
+STEP 1:- 
+New---> Others---->(wizard will open, type maven) maven project---->Next--->Next----Catalog(Internal) Filter(Quick start)----Next
+Group Id (it is similar to package, Ex: com.maven) Artifact Id( Ex: FirstMavenProject) Package(com.maven)----> FINISH.
+# now your basic structure of maven project will be created.
+
+STEP 2:-
+You need to choose current JRE system library, as currently it will be [J2SE-1.5].
+Right clik on the project----->Build Path--->Configure Build Path--->Libraries--->select JRE System library 1.5---->REmove.
+Add Libraries----->select JRE System Library NEXT---->Select Execution Environment, from dropdown slect the JavaSE-17(jre) version FINISH----> Apply n Close.
+# now you are having all required JRE libraries in your maven project.
+
+STEP 3:-
+You need to add the dependencies in your project.
+https://mvnrepository.com/artifact/org.hibernate/hibernate-core : From this link just choose the desired version of maven dependency and simply copy it.
+Open the POM.XML file which is present in your maven project, and simply paste the copied data under the tag <dependencies>
+THIS IS HIBERNATE COTRE DEPENDECY YOU CAN SIMPLY COPY IT HERE ALSO.
+  <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.6.5.Final</version>
+		</dependency>
+NOW MYSQL CONNECTOR DEPENDENCY
+<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.28</version>
+		</dependency>
+ Now simply save your pom.xml file.
+ 
+ STEP 4:-
+ Open the App.java file which is presented inside the src folder package. And paste the below code under the main() method.
+  
+  System.out.println( "Project with Maven Started.........!" );
+   SessionFactory sessionfactory=new Configuration().configure().buildSessionFactory();// making the sessionfactory object.
+   System.out.println(sessionfactory);
+   System.out.println(sessionfactory.isClosed());
+   
+   And save it.
+   
+   STEP 5:-
+   NOw create the configuration file.
+   Right click on project---> NEW--->XML FILE---->next---->(give the name as) Hibernate.cfg.xml-----next---->FINISH.
+   open the file and under the xml tag paste the DTD hibernate-configuration dependency from google or you can simply copy paste the below code and save.
+   
+   <!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+	
+now use the <hibernate-configuration> tag for further configuration. or paste the code below with some editiong like whatever database you are using
+that database driver path and user name, password and the database name where you want to create the table.
+
+	<hibernate-configuration>
+	<session-factory>
+	
+		<property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+		<property name="connection.url">jdbc:mysql://localhost:3306/your current database name</property>
+		<property name="connection.username">root</property>
+		<property name="connection.password">your database current password</property>
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="hbm2ddl.auto">update</property>
+		<property name="connection.show_sql">true</property>
+		</session-factory>
+	</hibernate-configuration>
+  
+  Step 6:-
+  Now you project is done its time to run your project.
+  Right click on the App.java file and Run as java Application.
+  
+  O/P: this will be your output on console with configuration...
+  
+  
+ Project with Maven Started.........!
+ org.hibernate.internal.SessionFactoryImpl@44a6a68e
+  false
+
+    
+
