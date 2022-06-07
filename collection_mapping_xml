@@ -1,0 +1,262 @@
+### COLLECTION MAPPING ####
+
+Hello guys!!
+here i am going to do one simple project of Hibernate using xml mapping technique to map the Collection Type data types.
+
+When you map your Hibernate persistenec class with Collections Data types like Array, List, Set, Map etc then callde Collections Mapping.
+
+STEP 1:- first you need to write the POJO class.
+POJO cass name:-   Student.java
+
+package com.jtc;
+
+import java.util.*;
+
+public class Student2 {
+	private int sid;
+	private String sname;
+	private String dob;
+	private String qualification;
+	private String courses[];
+	private List<String>emails;
+	private List<Integer>marks;
+	private Set<Long>phones;
+	private Map<String,Long>refs;
+	
+	public Student2() {
+		
+	}
+	public Student2(int sid, String sname, String dob, String qualificaton, String courses[], List<String>emails, List<Integer>marks, Set<Long>phones, Map<String,Long>refs) {
+	
+		super();
+	this.sid = sid;
+	this.sname=sname;
+	this.dob=dob;
+	this.qualification=qualification;
+	this.courses=courses;
+	this.emails=emails;
+	this.marks=marks;
+	this.phones=phones;
+	this.refs=refs;
+	
+}
+	public int getSid() {
+		return sid;
+	}
+	public void setSid(int sid) {
+		this.sid = sid;
+	}
+	public String getSname() {
+		return sname;
+	}
+	public void setSname(String sname) {
+		this.sname = sname;
+	}
+	public String getDob() {
+		return dob;
+	}
+	public void setDob(String dob) {
+		this.dob = dob;
+	}
+	public String getQualification() {
+		return qualification;
+	}
+	public void setQualification(String qualification) {
+		this.qualification = qualification;
+	}
+	public String[] getCourses() {
+		return courses;
+	}
+	public void setCourses(String[] courses) {
+		this.courses = courses;
+	}
+	public List<String> getEmails() {
+		return emails;
+	}
+	public void setEmails(List<String> emails) {
+		this.emails = emails;
+	}
+	public List<Integer> getMarks() {
+		return marks;
+	}
+	public void setMarks(List<Integer> marks) {
+		this.marks = marks;
+	}
+	public Set<Long> getPhones() {
+		return phones;
+	}
+	public void setPhones(Set<Long> phones) {
+		this.phones = phones;
+	}
+	public Map<String, Long> getRefs() {
+		return refs;
+	}
+	public void setRefs(Map<String, Long> refs) {
+		this.refs = refs;
+	}
+}
+
+STEP 2:- Now write the Hibernate Mapping file.
+Mapping file name:- Student.hbm.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+    <hibernate-mapping package="com.jtc">
+    
+    <class name="Student2" table="Student2">
+    <id name="sid" column="sid" type="int">
+    <generator class="increment"/>
+    </id>
+    	<property name="sname" column="name" type="string"></property>
+    	<property name="dob" column="dob" type="string"></property>
+    	<property name="qualification" column="quali" type="string"></property>
+    
+    	<array name="courses" table="courses">
+    	<key column="sid"/>
+    	<index column="idx"/>
+   		 <element column="course" type="string"/>
+    	</array>
+    
+		<list name="emails" table="emails">
+		<key column="sid"/>
+		<index column="idx"/>
+		<element column="emails" type="string" />
+		</list>
+		
+		<list name="marks" table="marks">
+		<key column="sid"/>
+		<index column="idx"/>
+		<element column="marks" type="int" />
+		</list>     	
+	
+		<set name="phones" table="phones">
+		<key column="sid"/>
+		<element column="phones" type="long" />
+		</set>
+		
+		<map name="refs" table="refs">
+		<key column="sid"/>
+		<index column="idx" type="string" />
+		<element column="refs" type="long" />
+		</map>
+    
+    </class>
+    </hibernate-mapping>
+    
+    STEP 3 :-
+    now write the Configuration file.
+    Configuration file name: - Chibernate.cfg.xml
+    
+    <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+	
+<hibernate-configuration>
+	
+<session-factory>
+		<property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/myhiber</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">sonijyoti</property>
+	    <property name="hibernate.connection.pool_size">99</property>
+	    <property name="dialect">org.hibernate.dialect.MySQL8Dialect</property>
+	    <property name="hibernate.show_sql">true</property>
+	    <property name="hibernate.formate_sql"></property>
+	    <property name="hbm2ddl.auto">update</property>
+	       
+	    
+	    <mapping resource="com/jtc/Student.hbm.xml"></mapping> 
+	    
+</session-factory>
+</hibernate-configuration>
+
+STEP 4:-
+now write the UTILITY file.
+UTILITY file name:- ChibernateUtil.java
+
+package com.jtc;
+
+import org.hibernate.*;
+import org.hibernate.cfg.Configuration;
+
+public class ChibernateUtil {
+	
+		static SessionFactory factory=null;
+		
+		static {
+			try {
+			Configuration cfg=new Configuration();
+			cfg=cfg.configure("Chibernate.cfg.xml");
+			factory=cfg.buildSessionFactory();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		}
+		
+		public static SessionFactory getSessionFactory() {
+			
+			
+			return factory;
+		}
+
+	}
+
+STEP 5:-
+now write the client file like what you wana do.
+Client file name:- Jtc3A.java
+
+package com.jtc;
+
+import java.util.*;
+import javax.print.DocFlavor.STRING;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.SessionFactory;
+import org.hibernate.*;
+
+public class Jtc3A {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		try {
+			SessionFactory sf=ChibernateUtil.getSessionFactory();
+			Session session=sf.openSession();
+			Transaction tx=session.beginTransaction();
+			String cous[]= {"java","JDBC","JSP"};
+			List<String>ems=new ArrayList<String>();
+			ems.add("aa@jtc");
+			ems.add("bb@jtc");
+			ems.add("cc@jtc");
+			List<Integer>maks=new ArrayList<Integer>();
+			maks.add(100);
+			maks.add(99);
+			maks.add(100);
+			Set<Long>phs=new HashSet<Long>();
+			phs.add(1111L);
+			phs.add(2222L);
+			phs.add(3333L);
+			
+			Map<String,Long>refs=new HashMap<String,Long>();
+			refs.put("aaa",(1111L));
+			refs.put("bbb",(2222L));
+			refs.put("ccc",(3333L));
+			
+			Student2 stu=new Student2(101,"som","10-10-10","M.sc",cous,ems,maks,phs,refs);
+			session.save(stu);
+			tx.commit();
+			session.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+			
+		}
+	}
+
+}
+
+FINAL step:- now run the program, and cheak your database for that perticular table;
+    
+  
+
